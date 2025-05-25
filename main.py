@@ -4,7 +4,7 @@ import pygame
 import json
 import os
 
-# === Klasy podstawowe ===
+#Klasy podstawowe
 
 class ElementDmg:
     def __init__(self, fire=0, frost=0, water=0, air=0, earth=0, nature=0, electr=0):
@@ -33,7 +33,7 @@ class Statystyki:
         self.heal_bonus = 0
         self.atkspd = 1
 
-# === Itemy i ekwipunek ===
+#Itemy i ekwipunek
 
 class Item:
     def __init__(self, id, tag, name, price):
@@ -84,7 +84,7 @@ class Armor:
         self.off_hand = None
         self.wand = None
 
-# === Umiejętności i walka ===
+#Umiejętności i walka
 
 class Spell:
     def __init__(self,id, tick, statystyki, additive=True):
@@ -93,7 +93,7 @@ class Spell:
         self.stats = statystyki
         self.additive = additive
 
-# === Postacie ===
+#Postacie
 
 class NPC:
     def __init__(self, ID, name, icon, level, base_stats, gold, armor, spells):
@@ -120,14 +120,14 @@ class Gracz(NPC):
 
 class Menu:
     def __init__(self):
-        self.stage = 'start'  # może być 'start', 'battle', 'inventory', etc.
-
+        self.stage = 'start'  #moze być 'start', 'battle', 'inventory', etc.
+        # TODO do dopisania
 
 
 def loot_distribution(gracze, enemy, ITEMS_DB):
     loot_slots = enemy.loot_table["slots"]
 
-    print("--- Rozdanie łupów ---")
+    print("--- Rozdanie lootu ---")
 
     for gracz in gracze:
         print("Gracz:", gracz.name)
@@ -137,13 +137,13 @@ def loot_distribution(gracze, enemy, ITEMS_DB):
             chance = slot["chance"]
 
             if random.random() <= chance:
-                # Przedmiot wylosowany
+                #Przedmiot wylosowany
                 item_data = ITEMS_DB.get(item_id)
                 if not item_data:
                     print("Nie znaleziono przedmiotu o ID:", item_id)
                     continue
 
-                # Szukamy odpowiedniego plecaka (zgodnego z tagiem)
+                #Szukamy odpowiedniego plecaka zgodnego z tagiem
                 matching_bags = [b for b in gracz.inventory if item_data["tag"] in b.kind]
                 if not matching_bags:
                     print("Brak odpowiedniego plecaka na", item_data["name"])
@@ -151,7 +151,7 @@ def loot_distribution(gracze, enemy, ITEMS_DB):
 
                 bag = matching_bags[0]
 
-                # Czy to consumable, które już mamy?
+                #Czy to consumable
                 if item_data["tag"] == "consumable":
                     found = False
                     for it in bag.items:
@@ -161,27 +161,27 @@ def loot_distribution(gracze, enemy, ITEMS_DB):
                             found = True
                             break
                     if found:
-                        continue  # Nie trzeba dodawać nowego
+                        continue  #Nie trzeba dodawac nowego
 
-                # Czy mamy miejsce?
+                #Czy mamy miejsce?
                 if len(bag.items) < bag.slots:
                     bag.items.append(item_data.copy())
                     print("Dodano do ekwipunku:", item_data["name"])
                 else:
-                    # Ekwipunek pełny
+                    #Ekwipunek pelny
                     print("Ekwipunek pełny. Co zrobić z", item_data["name"], "?")
                     print("1. Zamień przedmiot")
                     print("2. Odrzuć nowy przedmiot")
                     print("3. Anuluj (nie przyjmuj)")
 
-                    # Pseudo-interaktywne — dla testów wpisujemy numer opcji
+                    #Pseudo-interaktywne — dla testow wpisujemy numer opcji
                     try:
                         wybor = int(input("Wybór [1-3]: "))
                     except:
                         wybor = 3
 
                     if wybor == 1:
-                        # Wypisz przedmioty i pozwól zamienić
+                        #Wypisz przedmioty i pozwol zamienic
                         for i, it in enumerate(bag.items):
                             print(str(i) + ": " + it["name"])
                         try:
@@ -201,14 +201,14 @@ def loot_distribution(gracze, enemy, ITEMS_DB):
 def walka(gracze, enemy):
     wszyscy = gracze + enemy
 
-    # Inicjalizacja pivotów
+    #Inicjalizacja pivotow
     for unit in wszyscy:
         unit.pivot = 0
 
-    aktualna_druzyna = gracze  # gracze zaczynają
+    aktualna_druzyna = gracze  #gracze zaczynaja
 
     while True:
-        # Filtruj aktywnych uczestników
+        #Filtruj aktywnych uczestnikow
         aktywni = []
         for u in wszyscy:
             if u.current_stats.current_hp > 0 and u.pivot >= 0:
@@ -219,7 +219,7 @@ def walka(gracze, enemy):
             for unit in wszyscy:
                 unit.pivot += 1
 
-            # Zmiana drużyny na podstawie największego pivotu
+            #Zmiana druzyny na podstawie najwiekszego pivotu
             zywi = []
             for u in wszyscy:
                 if u.current_stats.current_hp > 0:
@@ -287,23 +287,23 @@ def walka(gracze, enemy):
 
 def runda(gracz: Gracz, enemy: Enemy):
     print(f"{gracz.name} vs {enemy.name} - tura start")
-    # Logika ataku gracza
+    #Logika ataku gracza
     dmg = gracz.current_stats.atk
     enemy.current_stats.current_hp -= dmg
     print(f"{gracz.name} zadaje {dmg} obrażeń {enemy.name}")
-    # Logika ataku przeciwnika
+    #Logika ataku przeciwnika
     if enemy.current_stats.current_hp > 0:
         dmg = enemy.current_stats.atk
         gracz.current_stats.current_hp -= dmg
         print(f"{enemy.name} zadaje {dmg} obrażeń {gracz.name}")
 
-# === Ładowanie danych JSON ===
+#Ładowanie danych JSON
 
 def wczytaj_json(sciezka):
     with open(sciezka, 'r', encoding='utf-8') as plik:
         return json.load(plik)
 
-# === Uruchomienie gry ===
+#Uruchomienie gry
 
 def main():
     pygame.init()
