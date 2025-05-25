@@ -1,0 +1,18 @@
+{
+"base_stats": {
+    "max_hp": 30,
+    "current_hp": 30,
+    "max_mana": 0,
+    "current_mana": 0,
+    "shield": 0,
+    "atk": 5,
+    "crit_rate": 0.05,
+    "crit_dmg": 1.2,
+    "element_dmg": {},
+    "defense": 1,
+    "element_res": {},
+    "def_shred": 0,
+    "heal_bonus": 0,
+    "atkspd": 1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id" : "0i001",
+  "tag": "equipment",
+  "slot_tag": "wand",
+  "name": "Basic Wand",
+  "price": 50,
+  "statystyki": {
+    "atk": 2,
+    "element_dmg": {
+      "fire": 3
+    }
+  },
+  "spell": "spell001",
+  "rarity": "common"
+}

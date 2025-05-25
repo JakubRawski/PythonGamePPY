@@ -1,0 +1,11 @@
+{
+  "id": "0s001",
+  "tick": -1,
+  "statystyki": {
+    "atk": 15,
+    "element_dmg": {
+      "fire": 15
+    }
+  },
+  "additive": true
+}
