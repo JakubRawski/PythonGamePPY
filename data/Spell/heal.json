@@ -4,5 +4,6 @@
   "statystyki": {
     "max_hp": 20
   },
-  "additive": true
+  "additive": true,
+  "harm": false
 }

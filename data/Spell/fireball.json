@@ -7,5 +7,6 @@
       "fire": 15
     }
   },
-  "additive": true
+  "additive": true,
+  "harm": true
 }
