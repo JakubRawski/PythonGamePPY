@@ -1,0 +1,28 @@
+{
+  "ID": "0p001",
+  "name": "Hero",
+  "icon": "hero.png",
+  "level": 1,
+  "gold": 100,
+  "base_stats": {
+    "max_hp": 100,
+    "current_hp": 100,
+    "max_mana": 50,
+    "current_mana": 50,
+    "shield": 0,
+    "atk": 10,
+    "crit_rate": 0.1,
+    "crit_dmg": 1.5,
+    "element_dmg": {},
+    "defense": 5,
+    "element_res": {},
+    "def_shred": 0,
+    "heal_bonus": 0,
+    "atkspd": 1
+  },
+  "armor": {},
+  "spells": [
+    "0s001",
+    "0s002"
+  ]
+}

@@ -2,7 +2,7 @@ from Class import *
 from Engine import *
 
 
-
+"""testy buffow i debuffow, nie zczytuje danych tylko statycznie daje"""
 def test1():
     rat_base_stats = Statystyki()
     rat_base_stats.max_hp = 30

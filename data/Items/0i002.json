@@ -1,8 +1,8 @@
 {
-  "id" : "0i002",
+  "id": "0i002",
   "tag": "consumable",
   "name": "Health Potion",
   "price": 10,
-  "spell": "spell_heal001",
+  "spell": "0s002",
   "quantity": 1
 }

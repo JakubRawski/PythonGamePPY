@@ -1,0 +1,9 @@
+{
+  "id": "0s002",
+  "tick": -1,
+  "statystyki": {
+    "max_hp": 20
+  },
+  "additive": true,
+  "harm": false
+}

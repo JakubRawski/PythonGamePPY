@@ -1,3 +1,7 @@
+import random
+
+import pygame
+
 
 #Statystyki
 
@@ -74,6 +78,11 @@ class Bag:
                 self.items[i] = None # usuwanie znalezionego itemu
                 return True
         return False
+
+    def get_items(self):
+        #zwraca liste przedmiotow
+        return [item for item in self.items if item is not None]
+
 
 class Bagpack(Bag):
     def __init__(self, num_slots, accepted_kinds):
@@ -187,7 +196,8 @@ class NPC:
     def __init__(self, ID, name, icon, level, base_stats, gold, armor, spells):
         self.ID = ID
         self.name = name
-        self.icon = icon
+        self.icon = icon  # Path obrazka
+        self.image = None  # Obiekt image
         self.level = level
         self.base_stats = base_stats
         self.current_stats = base_stats
@@ -196,6 +206,14 @@ class NPC:
         self.spells = spells # Lista spelli
         self.buffs = []  # Lista buffow debuffow
         self.pivot = 0  # poczatkowy pivot
+    def load_image(self, image_path):
+        # Laduje zdjecie
+
+        try:
+            self.image = pygame.image.load(image_path).convert_alpha()
+        except pygame.error as e:
+            print(f"Error loading image {image_path}: {e}")
+            self.image = None  # Set to None if loading fails
 
     def apply_buffs(self):
         # naklada buffy oraz usuwa nieaktualne
@@ -259,7 +277,37 @@ class Enemy(NPC):
     def __init__(self, ID, name, icon, level, base_stats, gold, armor, spells, loot_table):
         super().__init__(ID, name, icon, level, base_stats, gold, armor, spells)
         self.loot_table = loot_table
+    def _wybierz_cel_i_atakuj(self, przeciwnicy):
+        #TODO to jest basic atak, na arzie zostawic dopoki AI bedzie gotowe
+        zywi_przeciwnicy = [u for u in przeciwnicy if u.current_stats.current_hp > 0]
+        if not zywi_przeciwnicy:
+            print("Brak przeciwników do ataku.")
+            return "no_target"
 
+        cel = self._wybierz_cel(zywi_przeciwnicy)
+        if cel:
+            dmg = self.current_stats.atk
+            cel.current_stats.current_hp -= dmg
+            hp_left = max(cel.current_stats.current_hp, 0)
+            print(f"{self.name} atakuje {cel.name} za {dmg} dmg. ({hp_left} HP left)")
+            return "atak"
+        return "cancel"
+    def _wybierz_cel(self, possible_targets):
+        # sluzy do targetu daje liste i graczy i przeciwnikow (tak, mozna zabic swojego i buffowac przeciwnika)
+        # to nie bug tylko feature ktory chce zachowac
+        if not possible_targets:
+            print("Brak dostępnych celów.")
+            return None
+
+        print("Wybierz cel:")
+        for i, target in enumerate(possible_targets):
+            print(f"{i + 1}. {target.name} (HP: {target.current_stats.current_hp}/{target.current_stats.max_hp})")
+
+        while True:
+            try:
+                return random.choice(possible_targets)
+            except ValueError:
+                print("Nieprawidłowe wejście. Wprowadź numer.")
 class Gracz(NPC):
     def __init__(self, ID, name, icon, level, base_stats, gold, armor, spells, inventory, menu):
         super().__init__(ID, name, icon, level, base_stats, gold, armor, spells)
@@ -293,7 +341,6 @@ class Gracz(NPC):
         if not possible_targets:
             print("Brak dostępnych celów.")
             return None
-
         print("Wybierz cel:")
         for i, target in enumerate(possible_targets):
             print(f"{i + 1}. {target.name} (HP: {target.current_stats.current_hp}/{target.current_stats.max_hp})")
@@ -308,21 +355,31 @@ class Gracz(NPC):
             except ValueError:
                 print("Nieprawidłowe wejście. Wprowadź numer.")
 
-    def _wybierz_cel_i_atakuj(self, przeciwnicy):
-        #TODO to jest basic atak, na arzie zostawic dopoki AI bedzie gotowe
-        zywi_przeciwnicy = [u for u in przeciwnicy if u.current_stats.current_hp > 0]
-        if not zywi_przeciwnicy:
-            print("Brak przeciwników do ataku.")
-            return "no_target"
+    def _wybierz_cel_i_atakuj(self, targets):
 
-        cel = self._wybierz_cel(zywi_przeciwnicy)
-        if cel:
-            dmg = self.current_stats.atk
-            cel.current_stats.current_hp -= dmg
-            hp_left = max(cel.current_stats.current_hp, 0)
-            print(f"{self.name} atakuje {cel.name} za {dmg} dmg. ({hp_left} HP left)")
-            return "atak"
-        return "cancel"
+        if not targets:
+            print("Brak celów do ataku.")
+            return
+
+
+        # jest to lista ale ma 1 wartosc
+        target_to_attack = targets[0]
+
+        # Prosty atak TODO zmienic
+        damage_dealt = max(0, self.current_stats.atk - target_to_attack.current_stats.defense)
+        target_to_attack.current_stats.current_hp -= damage_dealt
+
+        # Zeruje hp gdy jest ujemne
+        if target_to_attack.current_stats.current_hp < 0:
+            target_to_attack.current_stats.current_hp = 0
+
+        # dict z info co i jak
+        return {
+            "attacker": self.name,
+            "target": target_to_attack.name,
+            "damage": damage_dealt,
+            "target_hp_left": target_to_attack.current_stats.current_hp
+        }
 
     def _wybierz_przedmiot_i_cel(self, gracze, enemy):
         # wybor itemu

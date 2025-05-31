@@ -25,12 +25,12 @@
   "loot_table": {
     "slots": [
       {
-        "item": "wand001",
-        "chance": 0.2
+        "item": "0i001",
+        "chance": 0.5
       },
       {
-        "item": "potion001",
-        "chance": 0.5
+        "item": "0i002",
+        "chance": 0.2
       }
     ]
   }

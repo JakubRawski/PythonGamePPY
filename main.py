@@ -4,13 +4,16 @@ import pygame
 import json
 import os
 
-from playground import *
+from testBuffs import *
 from Class import *
 from Engine import *
 
 
 #Uruchomienie gry
 
+
+
+"""
 def main():
 
 
@@ -34,3 +37,8 @@ def main():
 if __name__ == '__main__':
     test1()
     #main()
+    
+    
+"""
+if __name__ == "__main__":
+   pass

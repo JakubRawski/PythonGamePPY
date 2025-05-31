@@ -1,5 +1,5 @@
 {
-  "id" : "0i001",
+  "id": "0i001",
   "tag": "equipment",
   "slot_tag": "wand",
   "name": "Basic Wand",
@@ -10,6 +10,6 @@
       "fire": 3
     }
   },
-  "spell": "spell001",
+  "spell": "0s001",
   "rarity": "common"
 }
